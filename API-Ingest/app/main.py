@@ -14,8 +14,6 @@ from pydantic import BaseModel
 from datetime import datetime
 from kafka import KafkaProducer, producer
 
-
-
 # Create class (schema) for the JSON
 # Date get's ingested as string and then before writing validated
 class InvoiceItem(BaseModel):
@@ -59,7 +57,7 @@ async def post_invoice_item(item: InvoiceItem): #body awaits a json with invoice
         print(json_as_string)
         
         # Produce the string
-        produce_kafka_string(json_as_string)
+        produce_kafka_string(json_as_string) #put in comment to test api
 
         # Encode the created customer item if successful into a JSON and return it to the client with 201
         return JSONResponse(content=json_of_item, status_code=201)
@@ -69,10 +67,9 @@ async def post_invoice_item(item: InvoiceItem): #body awaits a json with invoice
     except ValueError:
         return JSONResponse(content=jsonable_encoder(item), status_code=400)
         
-
 def produce_kafka_string(json_as_string):
     # Create producer
-        producer = KafkaProducer(bootstrap_servers='kafka:9092',acks=1)
+        producer = KafkaProducer(bootstrap_servers='kafka:9092',acks=1) #put to kafka:9092 when API is running in Docker
         
         # Write the string as bytes because Kafka needs it this way
         producer.send('ingestion-topic', bytes(json_as_string, 'utf-8'))
