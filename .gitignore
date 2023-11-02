@@ -350,3 +350,5 @@ MigrationBackup/
 .ionide/
 client/data.csv
 client/output.txt
+output.txt
+data.csv
